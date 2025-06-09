@@ -7,10 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LB1 Chat - M324</title>
 
-  <!-- Tailwind laden (zuerst!) -->
+  <!-- Tailwind laden -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Darkmode-Modus aktivieren -->
   <script>
     tailwind.config = {
       darkMode: 'class'
@@ -24,30 +22,34 @@
 </head>
 
 <body class="bg-white dark:bg-gray-900 text-black dark:text-white">
-<div class="flex justify-center w-full h-screen">
-  <div class="flex flex-col w-full h-full max-w-2xl bg-white dark:bg-gray-900 md:w-3/4 lg:w-2/4">
+  <div class="flex justify-center w-full h-screen">
 
-    <!-- Header -->
-    <div class="px-4 py-4 bg-blue-500 rounded-b">
-      <p class="text-lg font-bold text-white">LB1 Chat - M324</p>
+    <!-- Benutzerliste -->
+    <div class="hidden md:flex flex-col w-1/4 bg-gray-100 dark:bg-gray-800 p-4 text-sm overflow-y-auto" id="userList">
+      <p class="font-bold mb-2">Aktive Benutzer:</p>
+      <ul id="userListItems" class="space-y-1 text-black dark:text-white"></ul>
     </div>
 
-    <!-- Nachrichten -->
-    <div class="flex flex-col justify-start flex-grow gap-4 p-4 overflow-y-auto dark:text-white" id="messages"></div>
+    <!-- Chatbereich -->
+    <div class="flex flex-col w-full h-full max-w-2xl bg-white dark:bg-gray-900 md:w-3/4 lg:w-2/4">
+      <div class="px-4 py-4 bg-blue-500 rounded-b">
+        <p class="text-lg font-bold text-white">LB1 Chat - M324</p>
+      </div>
 
-    <!-- Eingabebereich -->
-    <div class="flex items-center px-4 py-4 bg-gray-100 dark:bg-gray-800 rounded-t">
-      <input id="messageInput" type="text" placeholder="Type a message"
-             class="flex-grow px-4 py-2 border border-gray-200 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-full focus:outline-none focus:ring-2 focus:ring-cyan-300" />
-      <button class="ml-4 text-cyan-300 hover:text-cyan-400 focus:outline-none" id="sendButton">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-        </svg>
-      </button>
+      <div class="flex flex-col justify-start flex-grow gap-4 p-4 overflow-y-auto dark:text-white" id="messages"></div>
+
+      <div class="flex items-center px-4 py-4 bg-gray-100 dark:bg-gray-800 rounded-t">
+        <input id="messageInput" type="text" placeholder="Type a message"
+          class="flex-grow px-4 py-2 border border-gray-200 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-full focus:outline-none focus:ring-2 focus:ring-cyan-300" />
+        <button class="ml-4 text-cyan-300 hover:text-cyan-400 focus:outline-none" id="sendButton">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+          </svg>
+        </button>
+      </div>
     </div>
   </div>
-</div>
 </body>
 
 </html>
