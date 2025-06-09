@@ -59,4 +59,9 @@ const waitForSocketState = (socket: WebSocket, state: any) => {
   });
 };
 
+app.get('/healthcheck', (req, res) => {
+  res.status(200).send('OK');
+});
+
+
 export { startServer, waitForSocketState };
