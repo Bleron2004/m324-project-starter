@@ -26,6 +26,7 @@
         break;
       case 'typing':
         typingUsers = message.users;
+        updateTypingIndicator();
         break;
       default:
         break;
@@ -68,5 +69,17 @@
       li.textContent = user.name;
       userList.appendChild(li);
     });
+  }
+
+  function updateTypingIndicator() {
+    const indicator = document.getElementById('typingIndicator');
+    const otherTypingUsers = typingUsers.filter((user) => user.id !== myUser.id);
+    if (otherTypingUsers.length === 0) {
+      indicator.textContent = '';
+    } else if (otherTypingUsers.length === 1) {
+      indicator.textContent = `${otherTypingUsers[0].name} schreibt ...`;
+    } else {
+      indicator.textContent = `${otherTypingUsers.length} Benutzer schreiben ...`;
+    }
   }
 })();
