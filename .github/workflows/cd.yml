@@ -5,7 +5,6 @@ on:
     branches: [master, development]
   workflow_dispatch:
 
-
 jobs:
   deploy:
     name: Build, Push & Deploy
@@ -33,9 +32,16 @@ jobs:
           version: 'latest'
 
       - name: Configure kubeconfig
+        shell: pwsh
         run: |
-          echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 -d > $HOME/.kube/config
+          # Ensure .kube directory exists
+          New-Item -ItemType Directory -Path "$HOME\.kube" -Force | Out-Null
 
+          # Decode base64 KUBECONFIG and write to file
+          [System.IO.File]::WriteAllBytes(
+            "$HOME\.kube\config",
+            [System.Convert]::FromBase64String("${{ secrets.KUBE_CONFIG_DATA }}")
+          )
 
       - name: Deploy to Kubernetes
         run: |
