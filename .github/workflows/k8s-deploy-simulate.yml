@@ -1,0 +1,31 @@
+name: Simuliertes Kubernetes Deployment
+
+on:
+  push:
+    branches: [master, development]
+  workflow_dispatch:
+
+jobs:
+  simulate-deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name:  Zeige Deployment-Manifest
+        run: |
+          echo " Anwendung würde jetzt mit folgendem Deployment deployed:"
+          echo "----------------------------------------"
+          cat k8s/deployment.yaml
+          echo "----------------------------------------"
+
+      - name:  Zeige Service-Manifest
+        run: |
+          echo " Anwendung würde jetzt mit folgendem Service deployed:"
+          echo "----------------------------------------"
+          cat k8s/deployment.yaml  # falls Service in einer Datei oder cat k8s/service.yaml
+          echo "----------------------------------------"
+
+      - name:  Simulierter Kubernetes-Deployment erfolgreich
+        run: echo " Deployment simulation complete."

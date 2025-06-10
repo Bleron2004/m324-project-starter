@@ -1,0 +1,11 @@
+﻿{
+  "agentId": 3,
+  "agentName": "DESKTOP-UM8J2E3",
+  "poolId": 1,
+  "poolName": "Default",
+  "serverUrl": "https://pipelinesghubeus14.actions.githubusercontent.com/7zgGUV5IXeSBhRMrcmgxmHCZkD1gxlKG95l7DljRdQSa6TcinT/",
+  "gitHubUrl": "https://github.com/Bleron2004/m324-project-starter",
+  "workFolder": "_work",
+  "useV2Flow": true,
+  "serverUrlV2": "https://broker.actions.githubusercontent.com/"
+}
