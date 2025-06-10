@@ -1,29 +1,28 @@
+// eslint.config.mjs
 import globals from 'globals';
-import pluginJs from '@eslint/js';
-import tseslint from 'typescript-eslint';
 
-/** @type {import('eslint').Linter.Config[]} */
-export default [
-  // 1) Basis-Regeln für alle TS-Dateien
+export default /** @type {import('eslint').Linter.Config[]} */ ([
+  // 1) Globale TS-Regeln für alle .ts/.tsx
   {
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       globals: globals.browser
     },
     ignores: ['client/**', 'build/**'],
+
+    // Hier fassen wir beide empfohlenen Regel-Sets per "extends" zusammen:
     extends: [
-      // ESLint Core empfohlene Regeln
-      'plugin:@eslint/js/recommended',
-      // TypeScript-Plugin empfohlene Regeln
-      ...tseslint.configs.recommended.extends
+      'plugin:@eslint/js/recommended',              // ESLint Core empfohlen
+      'plugin:@typescript-eslint/recommended'       // TS-Plugin empfohlen
     ],
+
     parser: '@typescript-eslint/parser',
     plugins: {
-      '@typescript-eslint': tseslint
+      '@typescript-eslint': '@typescript-eslint'
     }
   },
 
-  // 2) Spezielles Override nur für den Server, um No-ops auszuschalten
+  // 2) Relax rules nur im server-Ordner
   {
     files: ['server/**/*.ts'],
     rules: {
@@ -32,4 +31,4 @@ export default [
       'prefer-const': 'warn'
     }
   }
-];
+]);
