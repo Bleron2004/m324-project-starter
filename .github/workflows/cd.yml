@@ -1,21 +1,26 @@
+# .github/workflows/cd-pipeline.yml
 name: CD Pipeline
 
+# Nur bei Pushes auf master ausführen
 on:
   push:
-    branches: [master, development]
-  workflow_dispatch:
+    branches:
+      - master
 
 jobs:
   deploy:
-    name: Build, Push & Deploy to Kubernetes
-    runs-on: self-hosted
+    name: Build & Push Docker Image
+    runs-on: ubuntu-latest   # oder: self-hosted, je nach deinem Runner
 
     steps:
-      - name: Checkout repo
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKERHUB_USER }}/m324:latest .
+      - name: Set up QEMU (für Multi-Arch builds, optional)
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx (optional)
+        uses: docker/setup-buildx-action@v3
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -23,5 +28,13 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Build Docker Image
+        run: |
+          docker build \
+            --build-arg NODE_ENV=production \
+            -t ${{ secrets.DOCKERHUB_USER }}/m324:latest .
+
       - name: Push to Docker Hub
-        run: docker push ${{ secrets.DOCKERHUB_USER }}/m324:latest
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USER }}/m324:latest
+

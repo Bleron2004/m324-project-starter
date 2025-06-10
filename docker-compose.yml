@@ -1,0 +1,38 @@
+# m324-project-starter/docker-compose.yml
+services:
+  app:
+    build:
+      context: .           # dein Dockerfile liegt hier
+      dockerfile: Dockerfile
+    container_name: lb1-chat
+    restart: always
+
+    # mappe Container-Port 3000 auf deinen Host-Port 3000
+    ports:
+      - "3000:3000"
+
+    # mount dein gesamtes Projekt für Hot-Reload
+    volumes:
+      - ./:/app
+      # verhindere, dass node_modules deines Hosts
+      # den Container-Knoten „überschreibt“
+      - /app/node_modules
+
+    working_dir: /app
+
+    # zur Sicherheit: setze NODE_ENV auf development
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+
+    # starte deinen Dev-Server (ts-node-dev)
+    command: npm run dev
+
+  uptime-kuma:
+    image: louislam/uptime-kuma:latest
+    container_name: uptime-kuma
+    restart: always
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./uptime-kuma-data:/app/data
