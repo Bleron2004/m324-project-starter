@@ -8,36 +8,40 @@ on:
 
 jobs:
   deploy:
-    # <-- Hier beginnt dein neuer Job
+    name: Build, Push & Deploy to Kubernetes
     runs-on: self-hosted
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Install k3d
-        run: |
-          curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
-
-      - name: Create k3d cluster
-        run: |
-          k3d cluster create ci-test --wait
-
       - name: Build Docker image
-        run: |
-          docker build -t chat-app:ci .
+        run: docker build -t ${{ secrets.DOCKERHUB_USER }}/m324:latest .
 
-      - name: Load image into k3d
-        run: |
-          k3d image import chat-app:ci -c ci-test
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Deploy to k3d
-        run: |
-          kubectl apply -f k8s/deployment.yaml --context k3d-ci-test
-          kubectl rollout status deployment/chat-app --context k3d-ci-test
+      - name: Push to Docker Hub
+        run: docker push ${{ secrets.DOCKERHUB_USER }}/m324:latest
 
-      - name: Delete k3d cluster
-        if: always()
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      - name: Configure kubeconfig
+        shell: pwsh
         run: |
-          k3d cluster delete ci-test
-  
+          New-Item -ItemType Directory -Path "$HOME\.kube" -Force | Out-Null
+          [System.IO.File]::WriteAllBytes(
+            "$HOME\.kube\config",
+            [System.Convert]::FromBase64String("${{ secrets.KUBE_CONFIG_DATA }}")
+          )
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f k8s/deployment.yaml
+          kubectl rollout status deployment/chat-app
