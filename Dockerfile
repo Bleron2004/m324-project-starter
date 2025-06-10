@@ -1,17 +1,23 @@
-# Use the official Node.js image as the base image
-FROM node:18
+# 1) Basis-Image
+FROM node:18-alpine
 
-# Set the working directory inside the container
-WORKDIR ...
+# 2) Arbeitsverzeichnis im Container
+WORKDIR /app
 
-# Copy the package.json and package-lock.json files to the container
-COPY ...
+# 3) package.json und Lockfile kopieren
+COPY package.json package-lock.json ./
 
-# Install the dependencies
-RUN ...
+# 4) Dependencies installieren
+RUN npm ci
 
-# Copy the source code to the container
-COPY ...
+# 5) Restlichen Code kopieren
+COPY . .
 
-# Start the server when the container starts
-CMD ...
+# 6) Build ausführen (falls du einen Build-Schritt hast)
+RUN npm run build
+
+# 7) Container-Port freigeben (je nach App-Port)
+EXPOSE 3000
+
+# 8) Start-Befehl
+CMD ["npm", "run", "start"]
