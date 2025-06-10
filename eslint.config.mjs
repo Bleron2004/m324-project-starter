@@ -1,28 +1,26 @@
-// eslint.config.mjs
 import globals from 'globals';
+import pluginJs from '@eslint/js';
+import tsPlugin from '@typescript-eslint/eslint-plugin';
 
-export default /** @type {import('eslint').Linter.Config[]} */ ([
-  // 1) Globale TS-Regeln für alle .ts/.tsx
+/** @type {import('eslint').Linter.FlatConfig[]} */
+export default [
+  // 1) Empfohlene Core-Regeln von ESLint
+  pluginJs.configs.recommended,
+
+  // 2) Empfohlene Regeln des TypeScript-Plugins
+  tsPlugin.configs.recommended,
+
+  // 3) Override für alle TS/TSX: Browser-Globals erlauben, Parser setzen, client/build ignorieren
   {
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
+      parser: '@typescript-eslint/parser',
       globals: globals.browser
     },
     ignores: ['client/**', 'build/**'],
-
-    // Hier fassen wir beide empfohlenen Regel-Sets per "extends" zusammen:
-    extends: [
-      'plugin:@eslint/js/recommended',              // ESLint Core empfohlen
-      'plugin:@typescript-eslint/recommended'       // TS-Plugin empfohlen
-    ],
-
-    parser: '@typescript-eslint/parser',
-    plugins: {
-      '@typescript-eslint': '@typescript-eslint'
-    }
   },
 
-  // 2) Relax rules nur im server-Ordner
+  // 4) Relax-Rules nur im server-Ordner
   {
     files: ['server/**/*.ts'],
     rules: {
@@ -31,4 +29,4 @@ export default /** @type {import('eslint').Linter.Config[]} */ ([
       'prefer-const': 'warn'
     }
   }
-]);
+];
