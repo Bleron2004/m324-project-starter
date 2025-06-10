@@ -2,8 +2,9 @@ name: CD Pipeline
 
 on:
   push:
-    branches: [master]
+    branches: [master, development]
   workflow_dispatch:
+
 
 jobs:
   deploy:
